@@ -1,0 +1,1078 @@
+#LyX 2.3 created this file. For more info see http://www.lyx.org/
+\lyxformat 544
+\begin_document
+\begin_header
+\save_transient_properties true
+\origin unavailable
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman "default" "default"
+\font_sans "default" "default"
+\font_typewriter "default" "default"
+\font_math "auto" "auto"
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100 100
+\font_tt_scale 100 100
+\use_microtype false
+\use_dash_ligatures true
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement H
+\paperfontsize default
+\spacing single
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks false
+\pdf_pdfborder false
+\pdf_colorlinks false
+\pdf_backref false
+\pdf_pdfusetitle true
+\papersize default
+\use_geometry true
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\use_minted 0
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2.5cm
+\topmargin 3cm
+\rightmargin 2.5cm
+\bottommargin 3cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\is_math_indent 0
+\math_numbering_side default
+\quotes_style english
+\dynamic_quotes 0
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Standard
+\begin_inset CommandInset include
+LatexCommand include
+filename "/home/xdroid/.lyx/templates/math_shorthand.lyx"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Title
+Notes on Auto Parametric Resonance
+\end_layout
+
+\begin_layout Author
+xDroid
+\end_layout
+
+\begin_layout Section
+Motivation
+\end_layout
+
+\begin_layout Standard
+I came across this youtube video 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset CommandInset href
+LatexCommand href
+name "What If Swings Had Springs Instead Of Ropes: Autoparametric Resonance - Youtube"
+target "https://www.youtube.com/watch?v=MUJmKl7QfDU"
+literal "false"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+ the other day and I was fascinated by the conversion between a couple pendulum
+ and spring.
+ I thought it is due to some kind of duplicate eigenvalues with degenerate
+ mode, but it didn't quite explain the whole picture.
+ So I decided to dig in a bit deeper while trying to have some numerical
+ simulation data that I can play with.
+\end_layout
+
+\begin_layout Standard
+The spring-pendulum system is also related to the kapitza's pendulum and
+ the Mathieu type equation.
+\end_layout
+
+\begin_layout Section
+System set-up
+\end_layout
+
+\begin_layout Standard
+The Lagrangian of the coupled system reads
+\begin_inset Formula 
+\begin{align*}
+L & :=T-K,\\
+T & :=-gr\cos\theta+\frac{1}{2}\omega^{2}\left(r-R_{0}\right)^{2},\\
+K & :=\frac{1}{2}\dot{r}^{2}+\frac{1}{2}\left(r\dot{\theta}\right)^{2},
+\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula $g$
+\end_inset
+
+ is the gravity constant, 
+\begin_inset Formula $R_{0}$
+\end_inset
+
+ is the length of the spring when it is fully relaxed, 
+\begin_inset Formula $\omega$
+\end_inset
+
+ is the natural frequency of the spring and 
+\begin_inset Formula $\left(r,\theta\right)$
+\end_inset
+
+ is the polar coordinates.
+ The Euler-Lagrange equation 
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The good side of E-L equation is that we don't need to figure out the generalize
+d momentum 
+\begin_inset Formula $r^{2}\dot{\theta}$
+\end_inset
+
+ in the polar coordinate system, which may trick non-physics people (like
+ me).
+\end_layout
+
+\end_inset
+
+ reads
+\begin_inset Formula 
+\begin{align}
+\frac{\partial L}{\partial r} & =\frac{\d{}}{\d t}\left(\frac{\partial L}{\partial\dot{r}}\right),\label{eq:EL-r}\\
+\frac{\partial L}{\partial\theta} & =\frac{\d{}}{\d t}\left(\frac{\partial L}{\partial\dot{\theta}}\right)\label{eq:EL-theta}
+\end{align}
+
+\end_inset
+
+which can be simplified as
+\begin_inset Formula 
+\begin{align}
+\ddot{r} & =g\cos\theta+\dot{\theta}^{2}r-\omega^{2}\left(r-R_{0}\right),\label{eq:dynamics-r}\\
+r\ddot{\theta} & =-2\dot{r}\dot{\theta}-g\sin\theta.\label{eq:dynamics-theta}
+\end{align}
+
+\end_inset
+
+The only equilibrium to Eqn.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dynamics-r"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dynamics-theta"
+
+\end_inset
+
+ is 
+\begin_inset Formula $r=\overline{R}:=R_{0}+g/\omega^{2},\theta=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Asymptotic expansion
+\end_layout
+
+\begin_layout Standard
+The exchange of energy can be summarized as follows: we start with 
+\begin_inset Formula $\theta\left(0\right)\ll r\left(0\right)\ll1$
+\end_inset
+
+, meaning there is perturbation in the length of the spring (i.e.
+ we gently pull it down), but we keep the spring as straight as possible.
+ The spring starts to oscillate as the time moves forward, but the spring
+ has a noticable movement in the horizontal direction after a while; in
+ other words, the system starts to swing as a pendulum.
+ The oscillation in the spring is then reduced to the minimal, before the
+ whole system switches back to the oscillatory behavior.
+ This exchange keeps occuring.
+\end_layout
+
+\begin_layout Standard
+We characterize this behavior by means of asymptotic expansion 
+\begin_inset CommandInset citation
+LatexCommand cite
+after "Chapter 6"
+key "Nayfeh1995"
+literal "false"
+
+\end_inset
+
+, where the perturbation is assumed to behave in a regular and a longer
+ time scale.
+ Take the ansatz 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+\begin_inset Formula $\overline{R}$
+\end_inset
+
+ is to make the higher order terms dimensionless
+\end_layout
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{align*}
+r\left(t\right) & =\overline{R}+\epsilon\overline{R}r_{0}\left(t,\tau\right)+\epsilon^{2}\overline{R}r_{1}\left(t,\tau\right)+o\left(\epsilon^{2}\right),\\
+\theta\left(t\right) & =\quad+\epsilon\theta_{1}\left(t,\tau\right)\ \,+\epsilon^{2}\theta_{1}\left(t,\tau\right)\ \,+o\left(\epsilon^{2}\right)
+\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula $\tau:=\epsilon t$
+\end_inset
+
+ represents the longer time scale.
+ We plug them into Eqn.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dynamics-r"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dynamics-theta"
+
+\end_inset
+
+ and match the orders by 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ and 
+\begin_inset Formula $\epsilon^{2}$
+\end_inset
+
+ to get
+\begin_inset Formula 
+\begin{align}
+\ddot{r}_{0} & =-\omega^{2}r_{0},\label{eq:asymp-r-eps}\\
+\partial_{\tau}\dot{r}_{0}+\ddot{r}_{1} & =-\frac{g}{2\overline{R}}\theta_{0}^{2}+\dot{\theta}_{0}^{2}-\omega^{2}r_{1},\label{eq:asymp-r-eps2}\\
+\ddot{\theta}_{0} & =-\frac{g}{\overline{R}}\theta_{0},\label{eq:asymp-theta-eps}\\
+r_{0}\ddot{\theta}_{0}+\partial_{\tau}\dot{\theta}_{0}+\ddot{\theta}_{1} & =-\frac{g}{\overline{R}}\theta_{1}-2\dot{r}_{0}\dot{\theta}_{0}\label{eq:asymp-theta-eps2}
+\end{align}
+
+\end_inset
+
+where we take the convention that 
+\begin_inset Formula $\dot{}=\partial_{t}$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $\widetilde{\omega}:=\sqrt{g/\overline{R}}$
+\end_inset
+
+ denote the 
+\begin_inset Quotes eld
+\end_inset
+
+natural
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+this is actually never precisely attained by the system since the spring
+ has to react to the centrifugal force
+\end_layout
+
+\end_inset
+
+ frequency of the pendulum.
+ We solve Eqn.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:asymp-r-eps"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:asymp-theta-eps"
+
+\end_inset
+
+ directly 
+\begin_inset Formula 
+\begin{align*}
+r_{0} & =A_{1}\left(\tau\right)e^{i\omega t}+\overline{A}_{1}\left(\tau\right)e^{-i\omega t},\\
+\theta_{0} & =A_{2}\left(\tau\right)e^{i\widetilde{\omega}t}+\overline{A}_{2}\left(\tau\right)e^{-i\widetilde{\omega}t}
+\end{align*}
+
+\end_inset
+
+where 
+\begin_inset Formula $A_{1,2}$
+\end_inset
+
+ is yet to be solved.
+ Then we use these to solve for 
+\begin_inset Formula $r_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta_{1}$
+\end_inset
+
+ in Eqn.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:asymp-r-eps2"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:asymp-theta-eps2"
+
+\end_inset
+
+:
+\begin_inset Formula 
+\begin{multline}
+\ddot{r}_{1}+\omega^{2}r_{1}=-i\omega\left(A_{1}'e^{i\omega t}-\overline{A}_{1}'e^{-i\omega t}\right)-\frac{g}{2\overline{R}}\left(A_{2}^{2}e^{2i\widetilde{\omega}t}+2A_{2}\overline{A}_{2}+\overline{A}_{2}^{2}e^{-2i\widetilde{\omega}t}\right)\\
++\widetilde{\omega}^{2}\left(-A_{2}^{2}e^{2i\widetilde{\omega}t}+2A_{2}\overline{A}_{2}-\overline{A}_{2}^{2}e^{-2i\widetilde{\omega}t}\right),\label{eq:r1}
+\end{multline}
+
+\end_inset
+
+
+\begin_inset Formula 
+\begin{multline}
+\ddot{\theta}_{1}+\widetilde{\omega}^{2}\theta_{1}=-\left(A_{1}e^{i\omega t}+\overline{A}_{1}e^{-i\omega t}\right)\left(A_{2}e^{i\widetilde{\omega}t}+\overline{A}_{2}e^{-i\widetilde{\omega}t}\right)-i\widetilde{\omega}\left(A_{2}'e^{i\widetilde{\omega}t}-\overline{A}_{2}'e^{-i\widetilde{\omega}t}\right)\\
+-2i\omega\left(A_{1}e^{i\omega t}-\overline{A}_{1}e^{-i\omega t}\right)i\widetilde{\omega}\left(A_{2}e^{i\widetilde{\omega}t}-\overline{A}_{2}e^{-i\widetilde{\omega}t}\right).\label{eq:theta1}
+\end{multline}
+
+\end_inset
+
+A quick analysis before we dive into discussing about resonance:
+\end_layout
+
+\begin_layout Itemize
+For Eqn.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:r1"
+
+\end_inset
+
+, we have frequencies of 
+\begin_inset Formula $\omega$
+\end_inset
+
+ and 
+\begin_inset Formula $2\widetilde{\omega}$
+\end_inset
+
+;
+\end_layout
+
+\begin_layout Itemize
+For Eqn.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:theta1"
+
+\end_inset
+
+, we have frequencies of 
+\begin_inset Formula $\omega+\widetilde{\omega}$
+\end_inset
+
+, 
+\begin_inset Formula $\abs{\omega-\widetilde{\omega}}$
+\end_inset
+
+ and 
+\begin_inset Formula $\widetilde{\omega}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Non-resonant case 
+\begin_inset Formula $\omega\neq2\widetilde{\omega}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In this case, the solvability condition (i.e.
+ vanishing secular terms condition) reads
+\begin_inset Formula 
+\begin{align*}
+-i\omega A_{1}' & =0,\\
+-i\widetilde{\omega}A_{2}' & =0.
+\end{align*}
+
+\end_inset
+
+So 
+\begin_inset Formula $A_{1,2}$
+\end_inset
+
+ also stays constant even in the longer time scale, which implies there
+ is no energy exchange.
+\end_layout
+
+\begin_layout Subsection
+Resonant case 
+\begin_inset Formula $\omega\approx2\widetilde{\omega}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Assume that there is a beat frequency 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ s.t.
+\begin_inset Formula 
+\[
+\omega=2\widetilde{\omega}+\epsilon\sigma.
+\]
+
+\end_inset
+
+Then the solvability condition reads
+\begin_inset Formula 
+\begin{align*}
+-i\omega A_{1}'-\frac{3}{2}\widetilde{\omega}^{2}A_{2}^{2}e^{-i\sigma\tau} & =0,\\
+-i\widetilde{\omega}A_{2}'-\widetilde{\omega}\left(2\omega-\widetilde{\omega}\right)A_{1}\overline{A}_{2}e^{i\sigma\tau} & =0.
+\end{align*}
+
+\end_inset
+
+To make notation clear, introduce 
+\begin_inset Formula $\alpha_{1}:=\frac{3\widetilde{\omega}^{2}}{2\omega},\alpha_{2}:=\left(2\omega-\widetilde{\omega}\right),\Gamma:=e^{-i\sigma\tau}$
+\end_inset
+
+, then the aforementioned solvability condition reduces to
+\begin_inset Formula 
+\begin{align}
+A_{1}' & =i\alpha_{1}\Gamma A_{2}^{2},\label{eq:solvability-A1}\\
+A_{2}' & =i\alpha_{2}\overline{\Gamma}A_{1}\overline{A}_{2}.\label{eq:solvability-A2}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Multiply Eqn.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:solvability-A1"
+
+\end_inset
+
+ with 
+\begin_inset Formula $\frac{1}{\alpha_{1}}\overline{A}_{1}$
+\end_inset
+
+ and add it with the conjugate of Eqn.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:solvability-A2"
+
+\end_inset
+
+ paired with 
+\begin_inset Formula $\frac{1}{\alpha_{2}}A_{2}$
+\end_inset
+
+ leads to
+\begin_inset Formula 
+\[
+\frac{1}{\alpha_{1}}\overline{A}_{1}A_{1}'+\frac{1}{\alpha_{2}}A_{2}\overline{A}_{2}'=0
+\]
+
+\end_inset
+
+which implies that
+\begin_inset Formula 
+\[
+\frac{\d{}}{\d{\tau}}\left(\frac{1}{\alpha_{1}}\abs{A_{1}}^{2}+\frac{1}{\alpha_{2}}\abs{A_{2}}^{2}\right)=0.
+\]
+
+\end_inset
+
+Let 
+\begin_inset Formula $E$
+\end_inset
+
+ be the initial (as well as the constant) value 
+\begin_inset Formula $\frac{1}{\alpha_{1}}\abs{A_{1}\left(0\right)}^{2}+\frac{1}{\alpha_{2}}\abs{A_{2}\left(0\right)}^{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+We can utilize Eqn.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:solvability-A1"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:solvability-A2"
+
+\end_inset
+
+ in another way: notice that
+\begin_inset Formula 
+\begin{align*}
+\d{\left(A_{1}\overline{A}_{2}^{2}\overline{\Gamma}\right)} & =\overline{A}_{2}^{2}\overline{\Gamma}\d{A_{1}}+2A_{1}\overline{A}_{2}\Gamma\d{\overline{A}_{2}}+A_{1}\overline{A}_{2}^{2}\d{\overline{\Gamma}}\\
+ & =\overline{A}_{2}^{2}\overline{\Gamma}\left(i\alpha_{1}\Gamma A_{2}^{2}\right)\d{\tau}+2A_{1}\overline{A}_{2}\overline{\Gamma}\left(-i\alpha_{2}\Gamma\overline{A}_{1}A_{2}\right)\d{\tau}+i\sigma A_{1}\overline{A}_{2}^{2}\overline{\Gamma}\d{\tau}\\
+ & =i\abs{A_{2}}^{2}\left(\alpha_{1}\abs{A_{2}}^{2}-2\alpha_{2}\abs{A_{1}}^{2}\right)\d{\tau}+i\sigma A_{1}\overline{A}_{2}^{2}\overline{\Gamma}\d{\tau}
+\end{align*}
+
+\end_inset
+
+where the first half of RHS is purely imaginary, so
+\begin_inset Formula 
+\begin{align*}
+\d{\left(A_{1}\overline{A}_{2}^{2}\overline{\Gamma}+\overline{A}_{1}A_{2}^{2}\Gamma\right)} & =i\sigma A_{1}\overline{A}_{2}^{2}\overline{\Gamma}\d{\tau}-i\sigma\overline{A}_{1}A_{2}^{2}\Gamma\d{\tau}\\
+ & =\frac{\sigma}{\alpha_{2}}\overline{A}_{2}\d{A_{2}}+\frac{\sigma}{\alpha_{2}}A_{2}\d{\overline{A}_{2}}\\
+ & =\frac{\sigma}{\alpha_{2}}\d{\abs{A_{2}}^{2}}
+\end{align*}
+
+\end_inset
+
+which leads to (not to confuse this constant 
+\begin_inset Formula $L$
+\end_inset
+
+ with the Lagrangian)
+\begin_inset Formula 
+\[
+\text{Re}\left(A_{1}\overline{A}_{2}^{2}\overline{\Gamma}\right)=\frac{\sigma}{\alpha_{2}}\abs{A_{2}}^{2}+L.
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To derive a single equation describing how the energy is exchanged, consider
+ introducing 
+\begin_inset Formula $\xi:=\frac{1}{\alpha_{1}}\abs{A_{1}}^{2}/E$
+\end_inset
+
+.
+ Then, since
+\begin_inset Formula 
+\begin{align*}
+\d{\abs{A_{1}}^{2}} & =A_{1}\d{\overline{A}_{1}}+\overline{A}_{1}\d{A_{1}}\\
+ & =A_{1}\left(-i\alpha_{1}\overline{\Gamma}\overline{A}_{2}^{2}\right)\d{\tau}+\overline{A}_{1}\left(i\alpha_{1}\Gamma A_{2}^{2}\right)\d{\tau}\\
+ & =2\text{Im}\left(A_{1}\overline{A}_{2}^{2}\overline{\Gamma}\right)\d{\tau},
+\end{align*}
+
+\end_inset
+
+thus
+\begin_inset Formula 
+\begin{align*}
+\left(\alpha_{1}E\frac{\d{\xi}}{\d{\tau}}\right)^{2} & =\left(\frac{\d{\abs{A_{1}}^{2}}}{\d{\tau}}\right)^{2}=4\text{Im}\left(A_{1}\overline{A}_{2}^{2}\overline{\Gamma}\right)^{2}\\
+ & =4\abs{A_{1}\overline{A}_{2}^{2}\overline{\Gamma}}^{2}-4\text{Re}\left(A_{1}\overline{A}_{2}^{2}\overline{\Gamma}\right)^{2}\\
+ & =4\abs{A_{1}}^{2}\abs{\overline{A}_{2}}^{4}-4\left(\frac{\sigma}{\alpha_{2}}\abs{A_{2}}^{2}+L\right)^{2}\\
+ & =4E^{3}\xi\left(1-\xi\right)^{2}-4\left(\sigma E\left(1-\xi\right)+L\right)^{2},
+\end{align*}
+
+\end_inset
+
+i.e.
+ 
+\begin_inset Formula $\frac{\d{\xi}}{\d{\tau}}=\pm\sqrt{F^{2}\left(\xi\right)-G^{2}\left(\xi\right)}$
+\end_inset
+
+ where
+\begin_inset Formula 
+\[
+F\left(\xi\right):=\pm\frac{2}{\alpha_{1}}\sqrt{E\xi}\abs{1-\xi},G\left(\xi\right):=\pm\frac{2}{\alpha_{1}}\left(\sigma\left(1-\xi\right)+\frac{L}{E}\right).
+\]
+
+\end_inset
+
+The shape of 
+\begin_inset Formula $F$
+\end_inset
+
+, which is in fact an elliptic curve, looks like a bump with two wings.
+ The intersection of 
+\begin_inset Formula $F$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ is usually composed of three points 
+\begin_inset Formula $\xi_{1}\le\xi_{2}\le\xi_{3}$
+\end_inset
+
+, but due to physical constraint that 
+\begin_inset Formula $\xi$
+\end_inset
+
+ means the portion of energy, 
+\begin_inset Formula $\xi$
+\end_inset
+
+ is confined in 
+\begin_inset Formula $\left[\xi_{1},\xi_{2}\right]$
+\end_inset
+
+.
+ A further change of variable reveals the dynamics of 
+\begin_inset Formula $\xi$
+\end_inset
+
+ which involves some Jacobi functions.
+ In fact, let 
+\begin_inset Formula 
+\[
+\xi-\xi_{1}=\left(\xi_{2}-\xi_{1}\right)\sin^{2}\chi,
+\]
+
+\end_inset
+
+then (with 
+\begin_inset Formula $\eta:=\sqrt{\left(\xi_{2}-\xi_{1}\right)/\left(\xi_{3}-\xi_{1}\right)}<1$
+\end_inset
+
+)
+\begin_inset Formula 
+\begin{align*}
+2\left(\xi_{2}-\xi_{1}\right)\sin\chi\cos\chi\d{\chi}=\d{\xi} & =\frac{2}{\alpha_{1}}\sqrt{E}\sqrt{\left(\xi-\xi_{1}\right)\left(\xi-\xi_{2}\right)\left(\xi-\xi_{3}\right)}\d{\tau}\\
+ & =\frac{2}{\alpha_{1}}\sqrt{E}\sqrt{\eta^{4}\left(\xi_{3}-\xi_{1}\right)^{3}\sin^{2}\chi\cos^{2}\chi\left(1-\eta^{2}\sin^{2}\chi\right)}\d{\tau},
+\end{align*}
+
+\end_inset
+
+so
+\begin_inset Formula 
+\[
+\frac{\d{\chi}}{\sqrt{1-\eta^{2}\sin^{2}\chi}}=\frac{\sqrt{E\left(\xi_{3}-\xi_{1}\right)}}{\alpha_{1}}\d{\tau}=:\kappa\d{\tau}
+\]
+
+\end_inset
+
+or
+\begin_inset Formula 
+\[
+\sin\chi=\text{sn}\left(\kappa\tau;\eta\right).
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The calculation stops here (since I know nothing about Jacobi functions),
+ but the bottomline is that 
+\begin_inset Formula $\xi$
+\end_inset
+
+ follows a roughly harmonic oscillation with frequency in proportion to
+ 
+\begin_inset Formula $\epsilon\kappa\propto\epsilon\sqrt{E}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Section
+Numerical aspects
+\end_layout
+
+\begin_layout Standard
+The system described by Eqn.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dynamics-r"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:dynamics-theta"
+
+\end_inset
+
+ needs a sympletic solver or otherwise the error accumulates fast.
+ We implemented a very simple implicit midpoint solver where the anderson
+ algorithm is used to solve the implicit step.
+ The desired behavior is observed when 
+\begin_inset Formula $\omega:\widetilde{\omega}=2:1$
+\end_inset
+
+ and impaired when the ratio is away from 
+\begin_inset Formula $2:1$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+To visualize the change in 
+\begin_inset Formula $\xi\propto\abs{A_{1}}^{2}$
+\end_inset
+
+, recall that 
+\begin_inset Formula $r\approx\overline{R}+2\epsilon\overline{R}\text{Re}\left[A_{1}\left(\tau\right)\exp\left(i\omega t\right)\right]$
+\end_inset
+
+ and 
+\begin_inset Formula $\theta\approx2\epsilon\text{Re}\left[A_{2}\left(\tau\right)\exp\left(i\widetilde{\omega}t\right)\right]$
+\end_inset
+
+, so it might be helpful to consider
+\begin_inset Formula 
+\[
+E_{r}:=\frac{1}{\overline{R}^{2}}\left(r-\overline{R}\right)^{2}+\frac{1}{\left(\omega\overline{R}\right)^{2}}\dot{r}^{2}
+\]
+
+\end_inset
+
+and 
+\begin_inset Formula 
+\[
+E_{\theta}:=\theta^{2}+\frac{1}{\widetilde{\omega}^{2}}\dot{\theta}^{2}
+\]
+
+\end_inset
+
+which captures the energy portion of the spring and pendulum mode.
+\end_layout
+
+\begin_layout Standard
+In Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:freq-comparison 1.5 1.7"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:freq-comparison 2 2.3"
+
+\end_inset
+
+, the simulated trajectories are shown and the results match the theoretical
+ predictions that the only non-trivial exchange happens near 
+\begin_inset Formula $2:1$
+\end_inset
+
+ ratio.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename eps-0.020-omega-ratio-1.5.eps
+	width 50line%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename eps-0.020-omega-ratio-1.7.eps
+	width 50line%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Comparison across different frequency ratios: 1.5(left) and 1.7(right).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:freq-comparison 1.5 1.7"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename eps-0.020-omega-ratio-2.eps
+	width 50line%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename eps-0.020-omega-ratio-2.3.eps
+	width 50line%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Comparison across different frequency ratios: 2(left) and 2.3(right).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:freq-comparison 2 2.3"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We also wish to verify the frequency of such exchange.
+ As predicted by the asymptotic analysis, it happens at a speed of 
+\begin_inset Formula $\epsilon\kappa$
+\end_inset
+
+ which roughly scales with 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+.
+ That means, if we decrease 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ by a half, the period should double, which is partially verified in Fig.
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:eps-comparison 0.01 0.02"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename eps-0.010-omega-ratio-2.eps
+	width 50line%
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename eps-0.020-omega-ratio-2.3.eps
+	width 50line%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+Comparison across different perturbation amount: 
+\begin_inset Formula $\epsilon=0.01$
+\end_inset
+
+(left) and 
+\begin_inset Formula $0.02$
+\end_inset
+
+(right).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:eps-comparison 0.01 0.02"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Conclusion
+\end_layout
+
+\begin_layout Standard
+In this note, we explore the mechanism behind the mysterious coupled spring-pend
+ulum system and use asymptotic expansion to characterize the long-term bahavior.
+ The famous 2:1 ratio is explained by matching the secular terms and is
+ also verified by the numerical experiments.
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+btprint "btPrintAll"
+bibfiles "/home/xdroid/Documents/multiscale-pde/notes/mendeley-ref/auto parametric resonance"
+options "siam"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

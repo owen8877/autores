@@ -1,21 +1,29 @@
 # Parameter set-up
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import scipy.optimize
+import seaborn as sns
+from sklearn.manifold import Isomap, LocallyLinearEmbedding
 from tqdm import trange
 
+mpl.use(backend='TkAgg')
+sns.set_theme()
+
+omega_ratio = 1.7
 overall = 0.75
 g = 1 * overall
 omega = 2
-R0 = (2 ** 2 - 1) / omega ** 2 * overall
+R0 = (2 ** omega_ratio - 1) / omega ** 2 * overall
 Rbar = R0 + g / (omega ** 2)
 
 # Initial conditions
 # theta_0 = np.random.rand() * 0.1 - 0.2
 # r_0 = Rbar * (1 + np.random.rand() * 0.1 - 0.2)
-eps_ratio = 0.5
-theta_0 = 0.01 * eps_ratio
-r_0 = Rbar * (1.0 + eps_ratio * 0.05)
+eps = 0.02
+theta_0 = 1 * eps
+r_0 = Rbar * (1.0 + eps * 10)
 
 
 def implicit_midpoint_integrator(f_func, energy_func, y_0, ts, solver=scipy.optimize.anderson):
@@ -58,26 +66,49 @@ def system_source(_, y):
 
 def energy(y):
     r, rdot, theta, thetadot = y[0], y[1], y[2], y[3]
-    spring_P = 0.5 * omega ** 2 * (r - R0) ** 2 - g * (r-Rbar) * np.cos(theta)
-    spring_K = 0.5 * rdot ** 2
-    pendulum_P = -g * Rbar * np.cos(theta)
-    pendulum_K = 0.5 * (r * thetadot) ** 2
+    spring_P = 0.5 * (r - Rbar) ** 2 / Rbar ** 2 * omega ** 2
+    spring_K = 0.5 * rdot ** 2 / Rbar ** 2
+    pendulum_P = 0.5 * theta ** 2 * g
+    pendulum_K = 0.5 * thetadot ** 2 * Rbar
     return [spring_P + spring_K + pendulum_P + pendulum_K, spring_P, spring_K, pendulum_P, pendulum_K,
             spring_P + spring_K, pendulum_P + pendulum_K]
 
 
-ts = np.arange(0, 200, 0.2)
+ts = np.arange(0, 100, 0.1)
 _, trajectory, energies = implicit_midpoint_integrator(system_source, energy, np.array([r_0, 0, theta_0, 0]), ts)
 
-fig, axs = plt.subplots(6, 1, figsize=(9, 9))
+fig, axs = plt.subplots(5, 1, figsize=(9, 9))
 labels = ['r', '$\\dot{r}$', '$\\theta$', '$\\dot{\\theta}$']
 for j in range(4):
     axs[j].plot(ts, trajectory[:, j])
     axs[j].set(ylabel=labels[j])
-axs[-2].plot(ts, energies[:, 1:5])
-axs[-2].set(xlabel='t', ylabel='energy')
-axs[-2].legend(['s_P', 's_K', 'p_P', 'p_K'])
+# axs[-2].plot(ts, energies[:, 1:5])
+# axs[-2].set(xlabel='t', ylabel='energy')
+# axs[-2].legend(['s_P', 's_K', 'p_P', 'p_K'])
 axs[-1].plot(ts, energies[:, [0, 5, 6]])
 axs[-1].set(xlabel='t', ylabel='energy')
 axs[-1].legend(['total', 'spring', 'pendulum'])
+axs[-1].set_title(f'$\\epsilon={eps:.3f}$')
+fig.savefig(f'eps-{eps:.3f}-omega-ratio-{omega_ratio:.1f}.eps')
+
+embeddings = {
+    'Isomap': Isomap(n_neighbors=20, n_components=2),
+    'LLE': LocallyLinearEmbedding(n_neighbors=20, n_components=2, method="standard"),
+    'MLLE': LocallyLinearEmbedding(n_neighbors=20, n_components=2, method="modified"),
+    'HLLE': LocallyLinearEmbedding(n_neighbors=20, n_components=2, method="hessian"),
+    'LTSA': LocallyLinearEmbedding(n_neighbors=20, n_components=2, method="ltsa"),
+}
+fig, axs = plt.subplots(2, 3, figsize=(15, 10))
+for i, (name, embedding) in enumerate(embeddings.items()):
+    projection = embedding.fit_transform(trajectory)
+    df = pd.DataFrame(projection, columns=['x', 'y'])
+    df['time'] = ts
+    df['size'] = 1
+
+    ax = axs.flatten()[i]
+    sns.scatterplot(ax=ax, data=df, x='x', y='y', hue='time', size='size',
+                    palette=sns.color_palette("Spectral", as_cmap=True), legend=i == 0)
+    ax.set_title(name)
+fig.savefig(f'embedding-eps-{eps:.3f}-omega-ratio-{omega_ratio:.1f}.eps')
+
 plt.show()

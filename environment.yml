@@ -1,0 +1,12 @@
+name: autores
+channels:
+  - defaults
+dependencies:
+  - matplotlib
+  - numpy
+  - pandas
+  - python
+  - scikit-learn
+  - scipy
+  - seaborn
+  - tqdm

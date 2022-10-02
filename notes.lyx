@@ -281,7 +281,7 @@ status open
 \begin_inset Formula 
 \begin{align*}
 r\left(t\right) & =\overline{R}+\epsilon\overline{R}r_{0}\left(t,\tau\right)+\epsilon^{2}\overline{R}r_{1}\left(t,\tau\right)+o\left(\epsilon^{2}\right),\\
-\theta\left(t\right) & =\quad+\epsilon\theta_{1}\left(t,\tau\right)\ \,+\epsilon^{2}\theta_{1}\left(t,\tau\right)\ \,+o\left(\epsilon^{2}\right)
+\theta\left(t\right) & =\epsilon\theta_{0}\left(t,\tau\right)+\epsilon^{2}\theta_{1}\left(t,\tau\right)+o\left(\epsilon^{2}\right)
 \end{align*}
 
 \end_inset
@@ -997,7 +997,7 @@ reference "fig:eps-comparison 0.01 0.02"
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Graphics
@@ -1040,6 +1040,76 @@ Comparison across different perturbation amount:
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:eps-comparison 0.01 0.02"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename embedding-eps-0.020-omega-ratio-1.7.eps
+	width 100line%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+1.7 ratio embedding
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename embedding-eps-0.020-omega-ratio-2.eps
+	width 100line%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+2 ratio embedding
+\end_layout
 
 \end_inset
 
